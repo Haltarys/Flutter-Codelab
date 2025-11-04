@@ -11,19 +11,19 @@ class FavouritesPage extends StatelessWidget {
     final favourites = appState.favourites;
 
     if (appState.favourites.isEmpty) {
-      return Center(child: Text('No favourites yet'));
+      return const Center(child: Text('No favourites yet'));
     }
 
     return ListView(
       children: [
         Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Text('You have ${appState.favourites.length} favourites:'),
         ),
         for (final pair in favourites)
           ListTile(
             title: Text(pair.asLowerCase),
-            leading: Icon(Icons.favorite),
+            leading: const Icon(Icons.favorite),
             onLongPress: () {
               appState.removeFavourite(pair);
               print('Favourite ${pair.asLowerCase} removed');

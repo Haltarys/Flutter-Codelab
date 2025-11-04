@@ -27,6 +27,9 @@ linter:
     prefer_final_in_for_each: true
     prefer_final_locals: true
     prefer_final_parameters: true
+    prefer_const_constructors: true
+    sort_constructors_first: true
+    prefer_const_constructors_in_immutables: true
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 

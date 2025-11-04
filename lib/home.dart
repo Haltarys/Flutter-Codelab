@@ -17,10 +17,10 @@ class _HomeState extends State<Home> {
     final Widget page;
     switch (selectedIndex) {
       case 0:
-        page = GeneratorPage();
+        page = const GeneratorPage();
         break;
       case 1:
-        page = FavouritesPage();
+        page = const FavouritesPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -35,8 +35,8 @@ class _HomeState extends State<Home> {
                 child: NavigationRail(
                   extended: constraints.maxWidth >= 600,
                   destinations: [
-                    NavigationRailDestination(icon: Icon(Icons.home), label: Text('Home')),
-                    NavigationRailDestination(
+                    const NavigationRailDestination(icon: Icon(Icons.home), label: Text('Home')),
+                    const NavigationRailDestination(
                       icon: Icon(Icons.favorite),
                       label: Text('Favourites'),
                     ),
