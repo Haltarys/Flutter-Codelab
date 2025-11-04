@@ -30,6 +30,10 @@ void main() {
 
   // final and const
   final fi = i + 5; // Final variable, can only be set once (like `const` in JavaScript)
+  final int x;
+  x = 22; // Final variables can be set after their declaration, if declared with no value
+  // x = 23; // Only once, however (this would error)
+  print(x);
   const ci = 3.14; // Compile-time constant
 
   // Null safety
