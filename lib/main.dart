@@ -41,24 +41,26 @@ class MyAppState extends ChangeNotifier {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey;
   final SharedPreferencesWithCache _prefs;
 
+  List<WordPair> history = [];
   late WordPair current;
-  late Set<WordPair> favourites;
+  Set<WordPair> favourites = {};
 
   void _loadState() {
     final (storedFirst, storedSecond) = (_prefs.getString('first'), _prefs.getString('second'));
-    print('$storedFirst, $storedSecond');
+    print('Stored current: $storedFirst, $storedSecond');
     current = storedFirst == null || storedSecond == null
         ? WordPair.random()
         : WordPair(storedFirst, storedSecond);
 
     final storedFavourites = _prefs.getStringList('favourites');
-    print('$storedFavourites');
-    favourites = storedFavourites == null || storedFavourites.isEmpty
-        ? <WordPair>{}
-        : storedFavourites.map((final s) {
-            final [first, second] = s.split('|');
-            return WordPair(first, second);
-          }).toSet();
+    print('Stored favourites: $storedFavourites');
+    if (storedFavourites != null && storedFavourites.isNotEmpty) {
+      favourites = _deserialiseWordPairs(storedFavourites).toSet();
+    }
+
+    final storedHistory = _prefs.getStringList('history');
+    print('Stored history: $storedHistory');
+    history = storedHistory == null ? [current] : _deserialiseWordPairs(storedHistory).toList();
   }
 
   void _showFavouritedToast(final String message) {
@@ -67,8 +69,15 @@ class MyAppState extends ChangeNotifier {
     );
   }
 
-  List<String> serialiseFavourites() {
-    return favourites.map((final pair) => '${pair.first}|${pair.second}').toList();
+  static List<String> _serialiseWordPairs(final Iterable<WordPair> pairs) {
+    return pairs.map((final pair) => '${pair.first}|${pair.second}').toList();
+  }
+
+  static Iterable<WordPair> _deserialiseWordPairs(final List<String> pairs) {
+    return pairs.map((final pair) {
+      final [first, second] = pair.split('|');
+      return WordPair(first, second);
+    });
   }
 
   void getNext() {
@@ -76,6 +85,10 @@ class MyAppState extends ChangeNotifier {
 
     _prefs.setString('first', current.first); // Dangling Future
     _prefs.setString('second', current.second); // Dangling Future
+
+    history.add(current);
+    print('History: $history');
+    _prefs.setStringList('history', _serialiseWordPairs(history)); // Dangling Future
 
     notifyListeners();
   }
@@ -89,7 +102,7 @@ class MyAppState extends ChangeNotifier {
       _showFavouritedToast('"${current.asLowerCase}" was added to favourites.');
     }
 
-    _prefs.setStringList('favourites', serialiseFavourites());
+    _prefs.setStringList('favourites', _serialiseWordPairs(favourites)); // Dangling Future
     notifyListeners();
   }
 
@@ -97,7 +110,7 @@ class MyAppState extends ChangeNotifier {
     favourites.remove(favourite);
     _showFavouritedToast('"${favourite.asLowerCase}" was removed from favourites.');
 
-    _prefs.setStringList('favourites', serialiseFavourites());
+    _prefs.setStringList('favourites', _serialiseWordPairs(favourites)); // Dangling Future
     notifyListeners();
   }
 }
