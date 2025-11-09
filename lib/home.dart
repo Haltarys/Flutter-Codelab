@@ -10,7 +10,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var selectedIndex = 0;
+  int selectedIndex = 0;
 
   @override
   Widget build(final BuildContext context) {
@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
         page = const FavouritesPage();
         break;
       default:
-        throw UnimplementedError('no widget for $selectedIndex');
+        throw UnimplementedError('No widget for $selectedIndex!');
     }
 
     return LayoutBuilder(
