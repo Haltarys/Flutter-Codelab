@@ -26,40 +26,62 @@ class _HomeState extends State<Home> {
         throw UnimplementedError('No widget for $selectedIndex!');
     }
 
+    // The container for the current page, with its background color
+    // and subtle switching animation.
+    final mainArea = ColoredBox(
+      // color: colorScheme.surfaceContainerHighest,
+      color: Theme.of(context).colorScheme.primaryContainer,
+      child: AnimatedSwitcher(duration: const Duration(milliseconds: 2000), child: page),
+    );
+
     return LayoutBuilder(
       builder: (final context, final constraints) {
         return Scaffold(
-          body: Row(
-            children: [
-              SafeArea(
-                child: NavigationRail(
-                  extended: constraints.maxWidth >= 600,
-                  destinations: [
-                    const NavigationRailDestination(icon: Icon(Icons.home), label: Text('Home')),
-                    const NavigationRailDestination(
-                      icon: Icon(Icons.favorite),
-                      label: Text('Favourites'),
+          body: (constraints.maxWidth < 450)
+              ?
+                // Use a more mobile-friendly layout with BottomNavigationBar
+                // on narrow screens.
+                Column(
+                  children: [
+                    Expanded(child: mainArea),
+                    BottomNavigationBar(
+                      items: const [
+                        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                        BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
+                      ],
+                      currentIndex: selectedIndex,
+                      onTap: _setTab,
                     ),
                   ],
-                  selectedIndex: selectedIndex,
-                  onDestinationSelected: (final value) {
-                    print('selected: $value');
-                    setState(() {
-                      selectedIndex = value;
-                    });
-                  },
+                )
+              : Row(
+                  children: [
+                    SafeArea(
+                      child: NavigationRail(
+                        extended: constraints.maxWidth >= 600,
+                        destinations: const [
+                          NavigationRailDestination(icon: Icon(Icons.home), label: Text('Home')),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.favorite),
+                            label: Text('Favourites'),
+                          ),
+                        ],
+                        selectedIndex: selectedIndex,
+                        onDestinationSelected: _setTab,
+                      ),
+                    ),
+                    Expanded(child: mainArea),
+                  ],
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: page,
-                ),
-              ),
-            ],
-          ),
         );
       },
     );
+  }
+
+  void _setTab(final int value) {
+    print('selected: $value');
+    setState(() {
+      selectedIndex = value;
+    });
   }
 }
