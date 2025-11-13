@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_codelab/components/big_card.dart';
+import 'package:flutter_codelab/components/word_pairs_history.dart';
 import 'package:flutter_codelab/main.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,8 @@ class GeneratorPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Expanded(flex: 4, child: SafeArea(child: WordPairsHistory())),
+          const SizedBox(height: 10),
           BigCard(pair: pair),
           const SizedBox(height: 10),
           Row(
@@ -36,6 +39,7 @@ class GeneratorPage extends StatelessWidget {
               ElevatedButton(onPressed: appState.getNext, child: const Text('Next')),
             ],
           ),
+          const Spacer(flex: 2),
         ],
       ),
     );
