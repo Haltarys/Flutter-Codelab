@@ -9,19 +9,27 @@ class FavouritesPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final appState = context.watch<MyAppState>();
     final favourites = appState.favourites;
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
 
-    if (appState.favourites.isEmpty) {
+    if (favourites.isEmpty) {
       return const Center(child: Text('No favourites yet'));
     }
 
     return ListView(
+      semanticChildCount: favourites.length,
       children: [
         Padding(
           padding: const EdgeInsets.all(20),
-          child: Text('You have ${appState.favourites.length} favourites:'),
+          child: Text(
+            'You have ${favourites.length} favourites:',
+            style: TextStyle(color: primaryColor),
+          ),
         ),
         for (final pair in favourites)
           ListTile(
+            iconColor: primaryColor,
+            textColor: primaryColor,
             title: Text(pair.asLowerCase),
             leading: const Icon(Icons.favorite),
             onLongPress: () {
