@@ -28,19 +28,12 @@ class GeneratorPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavourite();
-                },
+                onPressed: appState.toggleFavourite,
                 icon: Icon(icon),
                 label: const Text('Like'),
               ),
               const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: const Text('Next'),
-              ),
+              ElevatedButton(onPressed: appState.getNext, child: const Text('Next')),
             ],
           ),
         ],
