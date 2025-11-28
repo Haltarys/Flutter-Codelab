@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_codelab/main.dart';
 import 'package:provider/provider.dart';
 
-class WordPairsHistory extends StatelessWidget {
+class WordPairsHistory extends StatefulWidget {
   const WordPairsHistory({super.key});
+
+  @override
+  State<WordPairsHistory> createState() => _WordPairsHistoryState();
+}
+
+class _WordPairsHistoryState extends State<WordPairsHistory> {
+  /// Needed so that [MyAppState] can tell [AnimatedList] below to animate
+  /// new items.
+  final _key = GlobalKey();
 
   @override
   Widget build(final BuildContext context) {
@@ -11,6 +20,8 @@ class WordPairsHistory extends StatelessWidget {
     final favourites = appState.favourites;
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
+
+    appState.historyListKey = _key;
 
     return Theme(
       data: theme.copyWith(
@@ -24,12 +35,16 @@ class WordPairsHistory extends StatelessWidget {
           size: theme.textTheme.bodyMedium?.fontSize,
         ),
       ),
-      child: ListView(
+      child: AnimatedList(
+        key: _key,
         reverse: true, // Makes the list scroll from bottom up instead of from top to bottom
-        children: [
-          // `.reversed` to show the most recent word first
-          for (final pair in appState.history.reversed)
-            Padding(
+        initialItemCount: appState.history.length,
+        itemBuilder: (final context, final index, final animation) {
+          final pair = appState.history.elementAt(appState.history.length - 1 - index);
+
+          return SizeTransition(
+            sizeFactor: animation,
+            child: Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +62,8 @@ class WordPairsHistory extends StatelessWidget {
                 ],
               ),
             ),
-        ],
+          );
+        },
       ),
     );
   }

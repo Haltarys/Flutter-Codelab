@@ -41,6 +41,8 @@ class MyAppState extends ChangeNotifier {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey;
   final SharedPreferencesWithCache _prefs;
 
+  GlobalKey? historyListKey;
+
   List<WordPair> history = [];
   late WordPair current;
   Set<WordPair> favourites = {};
@@ -81,6 +83,9 @@ class MyAppState extends ChangeNotifier {
   }
 
   void getNext() {
+    final animatedList = historyListKey?.currentState as AnimatedListState?;
+    animatedList?.insertItem(0);
+
     current = WordPair.random();
 
     _prefs.setString('first', current.first); // Dangling Future
