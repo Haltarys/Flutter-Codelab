@@ -25,7 +25,10 @@ class GeneratorPage extends StatelessWidget {
         children: [
           const Expanded(flex: 4, child: SafeArea(child: WordPairsHistory())),
           const SizedBox(height: 10),
-          BigCard(pair: pair),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 1000),
+            child: BigCard(pair: pair),
+          ),
           const SizedBox(height: 10),
           Row(
             mainAxisSize: MainAxisSize.min,
