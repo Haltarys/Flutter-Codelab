@@ -98,13 +98,14 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavourite() {
-    if (favourites.contains(current)) {
-      favourites.remove(current);
-      _showFavouritedToast('"${current.asLowerCase}" was removed from favourites.');
+  void toggleFavourite([WordPair? pair]) {
+    pair ??= current;
+    if (favourites.contains(pair)) {
+      favourites.remove(pair);
+      _showFavouritedToast('"${pair.asLowerCase}" was removed from favourites.');
     } else {
-      favourites.add(current);
-      _showFavouritedToast('"${current.asLowerCase}" was added to favourites.');
+      favourites.add(pair);
+      _showFavouritedToast('"${pair.asLowerCase}" was added to favourites.');
     }
 
     _prefs.setStringList('favourites', _serialiseWordPairs(favourites)); // Dangling Future
